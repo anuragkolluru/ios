@@ -1,0 +1,151 @@
+import UIKit
+
+class ViewController: UIViewController {
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view.
+        seacrh.isEnabled = false
+        nextBtn.isHidden = true
+        previousBtn.isHidden = true
+        resetBtn.isHidden = true
+        rsltImage.image = UIImage(named: "search")
+        
+    }
+    @IBOutlet weak var seacrh: UIButton!
+    
+    @IBOutlet weak var nextBtn: UIButton!
+    @IBOutlet weak var previousBtn: UIButton!
+    @IBOutlet weak var resetBtn: UIButton!
+    @IBAction func resetBtnClick(_ sender: Any) {
+        nextBtn.isHidden = true
+        previousBtn.isHidden = true
+        resetBtn.isHidden = true
+        titleInfo.text = nil
+        seacrhField.text = nil
+        rsltImage.image = UIImage(named: "search")
+        img = 0
+        titleDisplay.text = nil
+    }
+    @IBOutlet weak var titleDisplay: UILabel!
+    
+    var animal_title = ["IMPALA","LEOPARD","ELEPHANT","TIGER","BEAR"]
+    var bike_title = ["HYOSUNG","KTM","YAMAHA","NINJA","BMW"]
+    var place_title = ["TAJ MAHAL","RED FORT","CHARMINAR","GOLCONDA","QUTUBMINAR"]
+    
+    var array_img = [["impala","leopard","elephant","tiger","bear"],["hyosung","ktm","yamaha","ninja","bmw"],["taj mahal","red fort","shawarma","charminar","golconda","qutubminar"]]
+    
+    var array_topics = ["animals","bikes","places"]
+    
+    var animal_keywords = ["animal","animals","","creature","mammal"]
+    var bike_keywords = ["car","cars","motor","four wheeler","automobile","vehicle"]
+    var place_keywords = ["food","meal","cuisine","bread","brunch","edibles"]
+    
+    var animal = ["The impala is a medium-sized antelope found in eastern and southern Africa. The only extant member of the genus Aepyceros and tribe Aepycerotini, it was first described to European audiences by German zoologist Hinrich Lichtenstein in 1812.","The leopard is one of the five extant species in the genus Panthera, a member of the cat family, Felidae. It occurs in a wide range in sub-Saharan Africa, in some parts of Western and Central Asia, Southern Russia, and on the Indian subcontinent to Southeast and East Asia.","Elephants are the largest existing land animals. Three living species are currently recognised: the African bush elephant, the African forest elephant, and the Asian elephant. They are an informal grouping within the proboscidean family Elephantidae","The tiger is the largest living cat species and a member of the genus Panthera. It is most recognisable for its dark vertical stripes on orange fur with a white underside. An apex predator, it primarily preys on ungulates such as deer and wild boar.","Bears are carnivoran mammals of the family Ursidae. They are classified as caniforms or doglike carnivorans. Although only eight species of bears are extant, they are widespread, appearing in a wide variety of habitats throughout the Northern Hemisphere and partially in the Southern Hemisphere."]
+    
+    var bike = ["Hyosung Corporation is a South Korean industrial Chaebol, founded in 1966. It operates in various fields, including the chemical industry, industrial machinery, IT, trade, and construction. It is known in Korea mostly for high-end apartments and automatic teller machines.","KTM AG is an Austrian bicycle, motorcycle and sports car manufacturer owned by Pierer Mobility AG & Indian manufacturer Bajaj Auto International Holdings BV. It was formed in 1992 but traces its foundation to as early as 1934","Yamaha Motor Co., Ltd. is a Japanese manufacturer of motorcycles, marine products such as boats and outboard motors, and other motorized products. The company was established in 1955 upon separation from Yamaha Corporation, and is headquartered in Iwata, Shizuoka, Japan","The Kawasaki Ninja is a name given to several series of Kawasaki sport bikes that started with the 1984 GPZ900R. Kawasaki Heavy Industries trademarked a version of the word Ninja in the form of a wordmark, a stylised script, for use on motorcycles and spare parts thereof.","Bayerische Motoren Werke AG, commonly referred to as BMW, is a German multinational corporate manufacturer of luxury vehicles and motorcycles headquartered in Munich, Bavaria, Germany."]
+    
+    var place = ["The Taj Mahal, is an ivory-white marble mausoleum on the right bank of the river Yamuna in the Indian city of Agra. It was commissioned in 1632 by the Mughal emperor Shah Jahan to house the tomb of his favourite wife, Mumtaz Mahal; it also houses the tomb of Shah Jahan himself.","The Red Fort or Lal Qila is a historic fort in Old Delhi, Delhi in India that served as the main residence of the Mughal Emperors. Emperor Shah Jahan commissioned construction of the Red Fort on 12 May 1638, when he decided to shift his capital from Agra to Delhi.","The Charminar constructed in 1591, is a monument located in Hyderabad, Telangana, India. The landmark has become known globally as a symbol of Hyderabad and is listed among the most recognised structures in India.","Golconda Fort, located in Hyderabad, Telangana, India. Because of the vicinity of diamond mines, especially Kollur Mine, Golconda flourished as a trade centre of large diamonds, known as the Golconda Diamonds","The Qutub Minar, also spelled as Qutb Minar and Qutab Minar, is a minaret and victory tower that forms part of the Qutb complex, which lies at the site of Delhi’s oldest fortified city, Lal Kot, founded by the Tomar Rajputs. It is a UNESCO World Heritage Site in the Mehrauli area of South Delhi, India."]
+    
+    var topic:Int!
+    var img = 0
+
+    
+    @IBOutlet weak var seacrhField: UITextField!
+
+    @IBAction func searchFieldAction(_ sender: Any) {
+        if(!seacrhField.hasText){
+            seacrh.isEnabled = false
+        }
+        else{
+            seacrh.isEnabled = true
+        }
+    }
+    
+    
+    @IBAction func searchBtn(_ sender: Any) {
+        nextBtn.isHidden = false
+//        if(img == )
+//        nextButtonOutlet.isEnabled = true
+        previousBtn.isHidden = false
+        if(img == 0){
+        previousBtn.isEnabled = false
+        nextBtn.isEnabled = true
+        }
+        else{
+            previousBtn.isEnabled = true
+        }
+        resetBtn.isHidden = false
+        resetBtn.isEnabled = true
+        if(animal_keywords.contains(seacrhField.text!)){
+            topic = 0
+            update(image: img, topicNumber: topic)
+        }
+        else if(bike_keywords.contains(seacrhField.text!)){
+            topic = 1
+            update(image: img, topicNumber: topic)
+        }
+        else if(place_keywords.contains(seacrhField.text!)){
+            topic = 2
+            update(image: img, topicNumber: topic)
+        }
+        else{
+            rsltImage.image = UIImage(named: "error")
+            titleInfo.text! = "Enter any other topic"
+            nextBtn.isHidden = true
+            previousBtn.isHidden = true
+            resetBtn.isHidden = true
+        }
+        
+    }
+    
+    func update(image: Int, topicNumber: Int){
+        rsltImage.image = UIImage(named: array_img[topic][img])
+        if(topicNumber == 0){
+            titleInfo.text = animal[image]
+            titleDisplay.text = animal_title[image]
+        }
+        else if(topicNumber == 1){
+            titleInfo.text = bike[image]
+            titleDisplay.text = bike_title[image]
+        }
+        else if(topicNumber == 2){
+            titleInfo.text = place[image]
+            titleDisplay.text = place_title[image]
+        }
+    }
+    
+    @IBOutlet weak var rsltImage: UIImageView!
+    @IBAction func showNextImageBtn(_ sender: Any) {
+        img += 1
+        update(image: img, topicNumber: topic)
+        if(topic == 0 && img == animal.count-1){
+            nextBtn.isEnabled = false
+        }
+        else if(topic == 1 && img == bike.count-1){
+            nextBtn.isEnabled = false
+        }
+        else if(topic == 2 && img == place.count-1){
+            nextBtn.isEnabled = false
+        }
+        previousBtn.isEnabled = true
+        resetBtn.isHidden = false
+        resetBtn.isEnabled = true
+    }
+    @IBAction func showPreviousImageBtn(_ sender: Any) {
+        img -= 1
+        update(image: img, topicNumber: topic)
+        if(topic == 0 && img == 0){
+            previousBtn.isEnabled = false
+        }
+        else if(topic == 1 && img == 0){
+            previousBtn.isEnabled = false
+        }
+        else if(topic == 2 && img == 0){
+            previousBtn.isEnabled = false
+        }
+        nextBtn.isEnabled = true
+    }
+    @IBOutlet weak var titleInfo: UITextView!
+}
+
